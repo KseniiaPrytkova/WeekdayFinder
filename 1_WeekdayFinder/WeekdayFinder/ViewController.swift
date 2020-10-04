@@ -14,12 +14,35 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var yearTF: UITextField!
     @IBOutlet weak var resultLabel: UILabel!
     
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        dateTF.delegate = self
-//    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        dateTF.delegate = self
+        monthTF.delegate = self
+        yearTF.delegate = self
+    }
+
+//    limit number of symbols for each text field respectively
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let textFieldText = textField.text,
+            let rangeOfTextToReplace = Range(range, in: textFieldText) else {
+                return false
+        }
+        let substringToReplace = textFieldText[rangeOfTextToReplace]
+        let count = textFieldText.count - substringToReplace.count + string.count
+        
+        if textField == dateTF {
+            return count <= 2
+        } else if textField == monthTF {
+            return count <= 2
+        } else if textField == yearTF {
+            return count <= 4
+        } else {
+            return count <= 0
+        }
+    }
     
     @IBAction func findDay(_ sender: UIButton) {
+//        check if text fields do not contain an empty strings
         guard let day = dateTF.text, !day.isEmpty, let month = monthTF.text, !month.isEmpty, let year = yearTF.text, !year.isEmpty else { return }
 //        guard let day = dateTF.text, let month = monthTF.text, let year = yearTF.text else { return }
         
