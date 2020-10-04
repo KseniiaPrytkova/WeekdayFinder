@@ -8,20 +8,24 @@
 //Users/admin/swiftBook/WeekdayFinder/WeekdayFinder/ViewController.swift
 import UIKit
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var dateTF: UITextField!
     @IBOutlet weak var monthTF: UITextField!
     @IBOutlet weak var yearTF: UITextField!
     @IBOutlet weak var resultLabel: UILabel!
     
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        dateTF.delegate = self
+//    }
+    
     @IBAction func findDay(_ sender: UIButton) {
-        
-        guard let day = dateTF.text, let month = monthTF.text, let year = yearTF.text else { return }
+        guard let day = dateTF.text, !day.isEmpty, let month = monthTF.text, !month.isEmpty, let year = yearTF.text, !year.isEmpty else { return }
+//        guard let day = dateTF.text, let month = monthTF.text, let year = yearTF.text else { return }
         
         let calendar = Calendar.current
-        
         var dateComponents = DateComponents()
+        
         dateComponents.day = Int(day)
         dateComponents.month = Int(month)
         dateComponents.year = Int(year)
