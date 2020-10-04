@@ -43,28 +43,39 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func findDay(_ sender: UIButton) {
 //        check if text fields do not contain an empty strings
-        guard let day = dateTF.text, !day.isEmpty, let month = monthTF.text, !month.isEmpty, let year = yearTF.text, !year.isEmpty else { return }
+        guard let day = dateTF.text, !day.isEmpty, let month = monthTF.text, !month.isEmpty, let year = yearTF.text, !year.isEmpty, let intDay = Int(day), let intMonth = Int(month) else { return }
 //        guard let day = dateTF.text, let month = monthTF.text, let year = yearTF.text else { return }
         
-        let calendar = Calendar.current
-        var dateComponents = DateComponents()
+        func isStringContainsOnlyNumbers(string: String) -> Bool {
+            return string.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
+        }
         
-        dateComponents.day = Int(day)
-        dateComponents.month = Int(month)
-        dateComponents.year = Int(year)
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE"
-        
-        guard let date = calendar.date(from: dateComponents) else { return }
-        
-        let weekday = dateFormatter.string(from: date)
-        
-        resultLabel.text = weekday
+        if isStringContainsOnlyNumbers(string: day), isStringContainsOnlyNumbers(string: month), isStringContainsOnlyNumbers(string: year) {
+            if 1...31 ~= intDay, 1...12 ~= intMonth {
+                let calendar = Calendar.current
+                var dateComponents = DateComponents()
+
+                dateComponents.day = Int(day)
+                dateComponents.month = Int(month)
+                dateComponents.year = Int(year)
+
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "EEEE"
+
+                guard let date = calendar.date(from: dateComponents) else { return }
+
+                let weekday = dateFormatter.string(from: date)
+
+                resultLabel.text = weekday
+            } else {
+                resultLabel.text = "Your input is invalid (out of range)"
+            }
+        } else {
+            resultLabel.text = "Your input is not a number!"
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
 }
-
