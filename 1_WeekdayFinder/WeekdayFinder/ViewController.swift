@@ -5,7 +5,6 @@
 //  Created by admin on 10/1/20.
 //  Copyright © 2020 Kseniia Prytkova. All rights reserved.
 //
-//Users/admin/swiftBook/WeekdayFinder/WeekdayFinder/ViewController.swift
 import UIKit
 
 class ViewController: UIViewController, UITextFieldDelegate {
@@ -13,6 +12,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var monthTF: UITextField!
     @IBOutlet weak var yearTF: UITextField!
     @IBOutlet weak var resultLabel: UILabel!
+    
+    let calendar = Calendar.current
+    var dateComponents = DateComponents()
+    let dateFormatter = DateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,25 +44,21 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    func isStringContainsOnlyNumbers(string: String) -> Bool {
+        return string.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
+    }
+    
     @IBAction func findDay(_ sender: UIButton) {
 //        check if text fields do not contain an empty strings
-        guard let day = dateTF.text, !day.isEmpty, let month = monthTF.text, !month.isEmpty, let year = yearTF.text, !year.isEmpty, let intDay = Int(day), let intMonth = Int(month) else { return }
-//        guard let day = dateTF.text, let month = monthTF.text, let year = yearTF.text else { return }
-        
-        func isStringContainsOnlyNumbers(string: String) -> Bool {
-            return string.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
-        }
+        guard let day = dateTF.text, !day.isEmpty, let month = monthTF.text, !month.isEmpty, let year = yearTF.text, !year.isEmpty, let intDay = Int(day), let intMonth = Int(month) else {
+            resultLabel.text = "Your input is invalid (empty fields)"; return }
         
         if isStringContainsOnlyNumbers(string: day), isStringContainsOnlyNumbers(string: month), isStringContainsOnlyNumbers(string: year) {
             if 1...31 ~= intDay, 1...12 ~= intMonth {
-                let calendar = Calendar.current
-                var dateComponents = DateComponents()
-
                 dateComponents.day = Int(day)
                 dateComponents.month = Int(month)
                 dateComponents.year = Int(year)
 
-                let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "EEEE"
 
                 guard let date = calendar.date(from: dateComponents) else { return }
